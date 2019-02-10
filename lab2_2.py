@@ -35,7 +35,7 @@ def sort_year(year):
     location_list = []
     latitude_list = []
     longitude_list = []
-    geolocator = Nominatim(user_agent="name", timeout=None, scheme='http')
+    geolocator = Nominatim(user_agent="name", timeout=100, scheme='http')
     geocode = RateLimiter(geolocator.geocode, error_wait_seconds=5.0,
                           max_retries=0, swallow_exceptions=False, return_value_on_exception=True)
     for movie in sort_movies('locations.list.txt'):
