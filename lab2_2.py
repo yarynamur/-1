@@ -4,6 +4,12 @@ from geopy.geocoders import Nominatim
 
 
 def sort_movies(file):
+    """
+    () -> lst
+    Makes list of movies, years and locations from file 'locations.list'
+    e.g.
+    [['2006', 'Los Angeles, California, USA']]
+    """
     with open(file, encoding='utf-8', errors='ignore') as f:
         lines = f.read().split('\n')[14:-2]
     lst = []
@@ -23,6 +29,8 @@ def sort_year(year):
     """
     (int) -> lst
     Creates a list of locations made in given year
+    >>> sort_year(1970)
+    ([], [], [])
     """
     location_list = []
     latitude_list = []
@@ -31,7 +39,7 @@ def sort_year(year):
     geocode = RateLimiter(geolocator.geocode, error_wait_seconds=5.0,
                           max_retries=0, swallow_exceptions=False, return_value_on_exception=True)
     for movie in sort_movies('locations.list.txt'):
-        if movie[0] == str(year) and geolocator.geocode(movie[1]) != AttributeError:
+        if movie[0] == str(year) and type(movie[1]) == 'str':
             location = geolocator.geocode(movie[1])
             location_list.append(movie[1])
             latitude_list.append(location.latitude)
@@ -39,16 +47,11 @@ def sort_year(year):
     return location_list, latitude_list, longitude_list
 
 
-def color_creator(population):
-    if population < 2000:
-        return "green"
-    elif 2000 <= population <= 3500:
-        return "yellow"
-    else:
-        return "red"
-
-
-def create_map(yer):
+def create_map(year):
+    """
+    Creates map with location of movies of given year and colors of countries population
+    >>> create_map(2015)
+    """
     movies = sort_year(year)[0]
     lat = sort_year(year)[1]
     lon = sort_year(year)[2]
