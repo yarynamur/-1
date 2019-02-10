@@ -29,8 +29,8 @@ def sort_year(year):
     """
     (int) -> lst
     Creates a list of locations made in given year
-    >>> sort_year(1970)
-    ([], [], [])
+    >>> sort_year(1890)
+    (["Trafalgar Square, St James's, London, England, UK"], [51.508037], [-0.128049410707247])
     """
     location_list = []
     latitude_list = []
@@ -39,11 +39,12 @@ def sort_year(year):
     geocode = RateLimiter(geolocator.geocode, error_wait_seconds=5.0,
                           max_retries=0, swallow_exceptions=False, return_value_on_exception=True)
     for movie in sort_movies('locations.list.txt'):
-        if movie[0] == str(year) and type(movie[1]) == 'str':
+        if movie[0] == str(year):
             location = geolocator.geocode(movie[1])
-            location_list.append(movie[1])
-            latitude_list.append(location.latitude)
-            longitude_list.append(location.longitude)
+            if location != None:
+                location_list.append(movie[1])
+                latitude_list.append(location.latitude)
+                longitude_list.append(location.longitude)
     return location_list, latitude_list, longitude_list
 
 
